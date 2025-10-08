@@ -454,76 +454,21 @@ N'hésitez pas à :
 2. Créer une branche pour votre fonctionnalité
 3. Commiter vos changements
 4. Ouvrir une Pull Request
+   
+---
 
 ## 📝 Licence
 
 Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
+---
 ## 🙏 Remerciements
 
 - Inspiré par [Gymnasium](https://gymnasium.farama.org/)
 - Basé sur les principes de [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book-2nd.html) de Sutton et Barto
-```
 
-## 15. Fichier requirements.txt
-
-**requirements.txt**
-```txt
-numpy>=1.21.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
-gymnasium>=0.28.0
-```
-
-## Résumé final
-
-Voici la structure complète que nous avons créée :
-
-```
-gridworld_framework/
-├── __init__.py
-├── core/
-│   ├── __init__.py
-│   ├── gridworld_env.py
-│   └── mdp.py
-├── agents/
-│   ├── __init__.py
-│   ├── base_agent.py
-│   ├── random_agent.py
-│   ├── policy_iteration.py
-│   ├── value_iteration.py
-│   ├── monte_carlo.py
-│   └── q_learning.py
-├── utils/
-│   ├── __init__.py
-│   ├── visualization.py
-│   └── metrics.py
-├── examples/
-│   ├── __init__.py
-│   └── basic_usage.py
-├── setup.py
-├── requirements.txt
-└── README.md
-```
-
-### Comment tester le framework :
-
-1. **Installation** :
-```bash
-pip install -e .
-```
-
-2. **Test basique** :
-```python
-from gridworld_framework.examples import demo_random_agent
-env, agent = demo_random_agent()
-```
-
-3. **Test complet** :
-```python
-from gridworld_framework.examples import compare_all_agents
-env, agents, results = compare_all_agents()
-```
-
+---
 
 **Bon apprentissage ! 🚀**
+
+---
