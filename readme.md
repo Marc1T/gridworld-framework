@@ -1,266 +1,454 @@
-# GridWorld Reinforcement Learning Framework
+# 🎮 GridWorld Reinforcement Learning Framework
 
-Un framework modulaire pour l'apprentissage par renforcement basé sur des environnements GridWorld, inspiré de Gymnasium.
+Framework complet pour l'apprentissage et l'expérimentation d'algorithmes de Reinforcement Learning sur des environnements GridWorld.
 
-## 🚀 Fonctionnalités
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
+[![Gymnasium](https://img.shields.io/badge/Gymnasium-Compatible-green)](https://gymnasium.farama.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-- **Environnement GridWorld** compatible avec l'API Gymnasium
-- **Multiples algorithmes RL** implémentés :
-  - 🎯 Policy Iteration
-  - 💰 Value Iteration  
-  - 🎲 Monte Carlo
-  - 🤖 Q-learning
-  - 🎪 Agent aléatoire (baseline)
-- **Visualisations complètes** :
-  - Courbes d'apprentissage
-  - Fonctions de valeur V(s) et Q(s,a)
-  - Politiques optimales
-  - États du GridWorld en temps réel
-- **Interface conviviale** pour configurer les environnements
-- **Structure modulaire** et extensible
+## 📋 Table des matières
 
-## 📦 Installation
+- [Caractéristiques](#-caractéristiques)
+- [Installation](#-installation)
+- [Structure du projet](#-structure-du-projet)
+- [Démarrage rapide](#-démarrage-rapide)
+- [Algorithmes implémentés](#-algorithmes-implémentés)
+- [Analyses et visualisations](#-analyses-et-visualisations)
+- [Exemples](#-exemples)
+- [Documentation](#-documentation)
 
-### Installation directe
+---
 
+## ✨ Caractéristiques
+
+### 🎯 **Environnements**
+- GridWorld 2D personnalisable
+- Support des obstacles
+- Environnements déterministes et stochastiques
+- Compatible API Gymnasium
+- Multiples modes de rendu
+
+### 🤖 **Algorithmes**
+- **Programmation Dynamique**: Value Iteration, Policy Iteration
+- **Monte Carlo**: First-Visit, Every-Visit
+- **Temporal Difference**: Q-Learning, SARSA (à venir)
+- **Avancé**: Double Q-Learning
+
+### 📊 **Analyses**
+- **Convergence**: Analyse détaillée de la convergence
+- **Scalabilité**: Tests sur différentes tailles de grille
+- **Sensibilité**: Analyse des hyperparamètres
+- **Comparaison**: Benchmark entre algorithmes
+
+### 💾 **Fonctionnalités**
+- Sauvegarde/chargement d'agents (checkpoints)
+- Visualisations interactives
+- Rapports automatiques
+- Tracking complet des métriques
+
+---
+
+## 🚀 Installation
+
+### Prérequis
 ```bash
-git clone https://github.com/votre-username/gridworld-rl-framework.git
-cd gridworld-rl-framework
+Python >= 3.8
+```
+
+### Installation des dépendances
+```bash
+pip install numpy matplotlib gymnasium
+```
+
+### Installation du framework
+```bash
+git clone https://github.com/Marc1T/gridworld-framework.git
+cd gridworld_framework
 pip install -e .
 ```
 
-### Dépendances
+---
 
-```bash
-pip install numpy matplotlib seaborn gymnasium
+## 📁 Structure du projet
+
+```
+gridworld_framework/
+├── core/                          # Cœur du framework
+│   ├── __init__.py
+│   ├── gridworld_env.py          # Environnement GridWorld
+│   └── mdp.py                    # Classe MDP
+│
+├── agents/                        # Agents RL
+│   ├── __init__.py
+│   ├── base_agent.py             # Classe abstraite
+│   ├── random_agent.py           # Agent aléatoire
+│   ├── value_iteration.py        # Value Iteration
+│   ├── policy_iteration.py       # Policy Iteration
+│   ├── monte_carlo.py            # Monte Carlo
+│   └── q_learning.py             # Q-Learning
+│
+├── utils/                         # Utilitaires
+│   ├── __init__.py
+│   ├── visualization.py          # Visualisations
+│   ├── metrics.py                # Métriques
+│   └── convergence_analysis.py   # Analyses de convergence
+│
+├── examples/                      # Exemples
+│   ├── basic_usage.py
+│   ├── compare_algorithms.py
+│   └── example_complete.py
+│
+├── tests/                         # Tests unitaires
+│   ├── test_env.py
+│   └── test_agents.py
+│
+├── results/                       # Résultats (créé automatiquement)
+│   ├── plots/
+│   ├── checkpoints/
+│   └── reports/
+│
+├── README.md
+├── requirements.txt
+└── setup.py
 ```
 
-## 🎯 Utilisation rapide
+---
 
-### Exemple basique
+## 🎮 Démarrage rapide
+
+### 1. Créer un environnement
 
 ```python
-from gridworld_framework import GridWorldEnv, QLearningAgent
-from gridworld_framework.utils.visualization import plot_learning_curve
+from gridworld_framework.core.gridworld_env import GridWorldEnv
 
-# Créer l'environnement
 env = GridWorldEnv(
-    grid_shape=(4, 4),
-    initial_state=0,
-    goal_state=15,
-    obstacles=[5, 7, 11],
-    render_mode='human'
+    grid_shape=(5, 5),        # Grille 5x5
+    initial_state=0,          # Départ en haut à gauche
+    goal_state=24,            # Objectif en bas à droite
+    obstacles=[7, 12, 13],    # États obstacles
+    step_penalty=-0.01,       # Pénalité par pas
+    goal_reward=1.0           # Récompense pour le but
+)
+```
+
+### 2. Entraîner un agent
+
+```python
+from gridworld_framework.agents.q_learning import QLearningAgent
+
+# Créer l'agent
+agent = QLearningAgent(
+    env,
+    gamma=0.99,              # Facteur d'actualisation
+    learning_rate=0.1,       # Taux d'apprentissage
+    epsilon=1.0,             # Exploration initiale
+    epsilon_decay=0.995      # Décroissance de l'exploration
 )
 
-# Créer et entraîner l'agent
-agent = QLearningAgent(env, gamma=0.99, learning_rate=0.1)
-history = agent.train(n_episodes=1000)
+# Entraîner
+history = agent.train(n_episodes=1000, verbose=True)
 
-# Visualiser les résultats
+# Évaluer
+results = agent.evaluate(n_episodes=100)
+print(f"Taux de succès: {results['success_rate']:.1f}%")
+```
+
+### 3. Visualiser les résultats
+
+```python
+from gridworld_framework.utils.visualization import (
+    plot_learning_curve,
+    plot_value_function,
+    plot_policy
+)
+
+# Courbe d'apprentissage
 plot_learning_curve(history)
+
+# Fonction de valeur
+plot_value_function(agent.V, env.grid_shape)
+
+# Politique optimale
+plot_policy(agent.policy, env.grid_shape, action_names=['↑','→','↓','←'])
 ```
 
-### Exécuter les démonstrations
+### 4. Sauvegarder/charger
 
 ```python
-from gridworld_framework.examples import compare_all_agents
+# Sauvegarder
+agent.save("checkpoints/my_agent.npz")
 
-# Comparer tous les algorithmes
-env, agents, results = compare_all_agents()
+# Charger
+agent.load("checkpoints/my_agent.npz")
 ```
 
-## 📚 Algorithmes implémentés
+---
 
-### 🎯 Policy Iteration
-Algorithme de planification qui alterne entre l'évaluation et l'amélioration de politique.
+## 🤖 Algorithmes implémentés
 
-```python
-from gridworld_framework import PolicyIterationAgent
+### 📚 Programmation Dynamique
 
-agent = PolicyIterationAgent(env, gamma=0.99, theta=1e-6)
-agent.train()
-```
-
-### 💰 Value Iteration  
-Algorithme de planification qui calcule directement la fonction de valeur optimale.
+#### **Value Iteration**
+Calcule directement la fonction de valeur optimale.
 
 ```python
-from gridworld_framework import ValueIterationAgent
+from gridworld_framework.agents.value_iteration import ValueIterationAgent
 
 agent = ValueIterationAgent(env, gamma=0.99, theta=1e-6)
 agent.train()
 ```
 
-### 🎲 Monte Carlo
-Méthode d'apprentissage sans modèle basée sur des épisodes complets.
+**Équation de Bellman optimale:**
+```
+V(s) = max_a Σ P(s'|s,a)[R(s,a) + γV(s')]
+```
+
+#### **Policy Iteration**
+Alterne entre évaluation et amélioration de politique.
 
 ```python
-from gridworld_framework import MonteCarloAgent
+from gridworld_framework.agents.policy_iteration import PolicyIterationAgent
+
+agent = PolicyIterationAgent(env, gamma=0.99)
+agent.train()
+```
+
+### 🎲 Monte Carlo
+
+Apprend à partir d'épisodes complets.
+
+```python
+from gridworld_framework.agents.monte_carlo import MonteCarloAgent
 
 agent = MonteCarloAgent(
     env, 
     gamma=0.99,
     epsilon=1.0,
-    epsilon_decay=0.995
+    first_visit=True  # First-Visit ou Every-Visit
 )
-agent.train(n_episodes=1000)
+agent.train(n_episodes=5000)
 ```
 
-### 🤖 Q-learning
-Algorithme TD off-policy populaire pour l'apprentissage sans modèle.
+### ⚡ Temporal Difference
+
+#### **Q-Learning** (Off-Policy)
+Apprend la fonction Q optimale directement.
 
 ```python
-from gridworld_framework import QLearningAgent
+from gridworld_framework.agents.q_learning import QLearningAgent
 
 agent = QLearningAgent(
     env,
     gamma=0.99,
     learning_rate=0.1,
     epsilon=1.0,
-    epsilon_decay=0.998
+    use_double_q=False  # Double Q-Learning si True
 )
 agent.train(n_episodes=1000)
 ```
 
-## 🎨 Visualisation
-
-### Courbes d'apprentissage
-```python
-from gridworld_framework.utils.visualization import plot_learning_curve
-
-history = agent.train(n_episodes=1000)
-plot_learning_curve(history)
+**Mise à jour Q-Learning:**
+```
+Q(s,a) ← Q(s,a) + α[r + γ max_a' Q(s',a') - Q(s,a)]
 ```
 
-### Fonction de valeur et politique
+---
+
+## 📊 Analyses et visualisations
+
+### 1. Analyse de convergence
+
 ```python
-from gridworld_framework.utils.visualization import (
-    plot_value_function,
-    plot_policy,
-    plot_q_function
+from gridworld_framework.utils.convergence_analysis import (
+    analyze_convergence,
+    generate_convergence_report
 )
 
-# Fonction de valeur V(s)
-plot_value_function(agent.get_value_function(), env.grid_shape)
+# Analyser
+analysis = analyze_convergence(agent, metric='Q')
+print(f"Convergé: {analysis['converged']}")
+print(f"Épisode: {analysis['convergence_episode']}")
 
-# Politique optimale
-plot_policy(agent.get_policy(), env.grid_shape)
-
-# Fonction Q(s,a)
-plot_q_function(agent.get_q_function(), env.grid_shape)
+# Rapport détaillé
+report = generate_convergence_report(agent, save_path="report.txt")
+print(report)
 ```
 
-### Visualisation complète
+### 2. Test de scalabilité
+
 ```python
-from gridworld_framework.utils.visualization import visualize_gridworld
-
-visualize_gridworld(env, agent)
-```
-
-## ⚙️ Configuration de l'environnement
-
-### Grille personnalisée
-```python
-env = GridWorldEnv(
-    grid_shape=(5, 5),           # Taille de la grille
-    initial_state=0,             # État initial
-    goal_state=24,               # État objectif
-    goal_fixed=True,             # Objectif fixe ou aléatoire
-    obstacles=[6, 12, 18],       # États obstacles
-    render_mode='matplotlib'     # Mode de rendu
+from gridworld_framework.utils.convergence_analysis import (
+    test_gridworld_scalability,
+    plot_scalability_results
 )
+
+# Tester sur différentes tailles
+results = test_gridworld_scalability(
+    agent_class=QLearningAgent,
+    grid_sizes=[(4,4), (5,5), (6,6), (8,8), (10,10)],
+    n_episodes=500,
+    gamma=0.99
+)
+
+# Visualiser
+plot_scalability_results(results)
 ```
 
-### Matrices de transition personnalisées
-```python
-# Accéder aux matrices MDP
-P = env.get_transition_matrix()  # P[s, a, s']
-R = env.get_reward_matrix()      # R[s, a]
+### 3. Analyse de sensibilité
 
-# Modifier les matrices si nécessaire
-P[0, 0, 1] = 1.0  # Transition certaine
+```python
+from gridworld_framework.utils.convergence_analysis import (
+    test_hyperparameter_sensitivity,
+    plot_sensitivity_analysis
+)
+
+# Tester learning rates
+results = test_hyperparameter_sensitivity(
+    agent_class=QLearningAgent,
+    env=env,
+    param_name='learning_rate',
+    param_values=[0.01, 0.05, 0.1, 0.3, 0.5, 0.9],
+    n_episodes=500,
+    n_trials=5
+)
+
+# Visualiser
+plot_sensitivity_analysis(results, param_name='Learning Rate')
 ```
 
-## 📊 Métriques et évaluation
+### 4. Comparaison d'algorithmes
 
-### Évaluation simple
 ```python
-results = agent.evaluate(n_episodes=100)
-print(f"Reward moyen: {results['mean_reward']:.2f}")
-```
+from gridworld_framework.utils.convergence_analysis import (
+    plot_convergence_comparison
+)
 
-### Comparaison d'agents
-```python
-from gridworld_framework.utils.metrics import compare_agents
-
-agents = {
-    'Q-learning': q_agent,
-    'Monte Carlo': mc_agent,
-    'Policy Iteration': pi_agent
+# Entraîner plusieurs agents
+agents_histories = {
+    'Value Iteration': vi_agent.get_history(),
+    'Q-Learning': q_agent.get_history(),
+    'Monte Carlo': mc_agent.get_history()
 }
 
-results = compare_agents(agents, env, n_episodes=100)
+# Comparer
+plot_convergence_comparison(agents_histories)
 ```
 
-## 🏗️ Structure du projet
+---
 
-```
-gridworld_framework/
-├── core/                 # Cœur du framework
-│   ├── gridworld_env.py  # Environnement GridWorld
-│   └── mdp.py           # Classe MDP
-├── agents/              # Implémentations des algorithmes
-│   ├── base_agent.py    # Classe de base
-│   ├── random_agent.py
-│   ├── policy_iteration.py
-│   ├── value_iteration.py
-│   ├── monte_carlo.py
-│   └── q_learning.py
-├── utils/               # Utilitaires
-│   ├── visualization.py # Fonctions de visualisation
-│   └── metrics.py       # Métriques et comparaisons
-├── examples/            # Exemples d'utilisation
-│   └── basic_usage.py
-└── tests/               # Tests unitaires
-```
+## 💡 Exemples
 
-## 🔧 Extension du framework
+### Exemple 1: Environnement simple
 
-### Ajouter un nouvel agent
 ```python
-from gridworld_framework.agents.base_agent import BaseAgent
-
-class MyCustomAgent(BaseAgent):
-    def __init__(self, env, **kwargs):
-        super().__init__(env, **kwargs)
-        # Initialisation personnalisée
-    
-    def act(self, state, explore=True):
-        # Implémentation de la sélection d'action
-        pass
-    
-    def update(self, state, action, reward, next_state, done):
-        # Implémentation de la mise à jour
-        pass
+# Grille 4x4 classique
+env = GridWorldEnv(grid_shape=(4, 4))
+agent = QLearningAgent(env)
+agent.train(n_episodes=500)
+agent.evaluate(n_episodes=100)
 ```
 
-### Créer un environnement personnalisé
+### Exemple 2: Avec obstacles
+
 ```python
-from gridworld_framework.core.gridworld_env import GridWorldEnv
-
-class MyCustomGridWorld(GridWorldEnv):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # Personnalisations
-    
-    def _setup_mdp(self):
-        # Logique MDP personnalisée
-        pass
+# Grille avec obstacles
+env = GridWorldEnv(
+    grid_shape=(6, 6),
+    obstacles=[8, 9, 14, 15, 20, 21]
+)
+agent = QLearningAgent(env)
+agent.train(n_episodes=1000)
 ```
+
+### Exemple 3: Environnement stochastique
+
+```python
+# 10% de bruit (actions aléatoires)
+env = GridWorldEnv(
+    grid_shape=(5, 5),
+    stochastic=True,
+    noise=0.1
+)
+agent = QLearningAgent(env, learning_rate=0.1)
+agent.train(n_episodes=2000)
+```
+
+### Exemple 4: Benchmark complet
+
+Voir `examples/example_complete.py` pour un exemple complet incluant:
+- Entraînement de plusieurs algorithmes
+- Tests de scalabilité
+- Analyses de sensibilité
+- Visualisations complètes
+- Sauvegarde des résultats
+
+```bash
+python examples/example_complete.py
+```
+
+---
+
+## 📖 Documentation
+
+### Classes principales
+
+#### **GridWorldEnv**
+```python
+GridWorldEnv(
+    grid_shape=(4, 4),           # Dimensions
+    initial_state=0,             # État de départ
+    goal_state=15,               # But
+    obstacles=[],                # Liste d'obstacles
+    stochastic=False,            # Transitions stochastiques
+    noise=0.0,                   # Niveau de bruit
+    step_penalty=-0.01,          # Coût par action
+    goal_reward=1.0,             # Récompense du but
+    obstacle_penalty=-1.0,       # Pénalité obstacle
+    render_mode=None             # 'human', 'matplotlib', 'rgb_array'
+)
+```
+
+#### **BaseAgent**
+Méthodes communes à tous les agents:
+- `train(n_episodes, max_steps, verbose)`
+- `evaluate(n_episodes, render)`
+- `act(state, explore)`
+- `save(filepath)`
+- `load(filepath)`
+- `get_policy()`
+- `get_value_function()`
+- `get_q_function()`
+
+---
+
+## 🔬 Analyses disponibles
+
+### Métriques de performance
+- Récompense moyenne et écart-type
+- Taux de succès
+- Longueur moyenne des épisodes
+- Vitesse de convergence
+- Stabilité post-convergence
+
+### Visualisations
+- Courbes d'apprentissage
+- Fonctions de valeur (V et Q)
+- Politiques optimales
+- Comparaisons entre algorithmes
+- Tests de scalabilité
+- Analyses de sensibilité
+
+---
 
 ## 🤝 Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à :
+- Signaler des bugs
+- Proposer de nouvelles fonctionnalités
+- Améliorer la documentation
+- Ajouter des exemples
+
+N'hésitez pas à :
 
 1. Fork le projet
 2. Créer une branche pour votre fonctionnalité
@@ -336,3 +524,6 @@ env, agent = demo_random_agent()
 from gridworld_framework.examples import compare_all_agents
 env, agents, results = compare_all_agents()
 ```
+
+
+**Bon apprentissage ! 🚀**

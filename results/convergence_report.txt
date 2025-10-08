@@ -1,0 +1,35 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║        RAPPORT D'ANALYSE DE CONVERGENCE                      ║
+╚══════════════════════════════════════════════════════════════╝
+
+Agent: QLearningAgent
+Total d'épisodes: 1000
+Total de steps: 18835
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONVERGENCE DE Q(s,a)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Convergé: ✓ OUI
+Épisode de convergence: 62
+Ratio de convergence: 6.2%
+Vitesse de convergence: 0.014375
+Stabilité post-convergence: 0.000702
+Valeur finale de Q max: 1.0000
+Valeur maximale de Q: 1.0000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONVERGENCE DES RÉCOMPENSES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Convergé: ✓ OUI
+Épisode de convergence: 144
+Ratio de convergence: 14.4%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PERFORMANCE GLOBALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Récompense moyenne (100 derniers): 0.91 ± 0.00
+Taux de succès (100 derniers): 100.0%
+Longueur moyenne d'épisode: 10.1 ± 0.4
+
+╚══════════════════════════════════════════════════════════════╝
